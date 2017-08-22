@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace BenefitGenerator
 {
@@ -49,17 +49,46 @@ namespace BenefitGenerator
 
         private static void Main(string[] args)
         {
-            var inputFile = Environment.CurrentDirectory = "Benefit.txt";
+            //var inputFile = Environment.CurrentDirectory = "Benefit.txt";                   
 
+            List<string> list = new List<string>();
+            var benefitCodeResults = new List<Benefit>();
+            using (StreamReader reader = new StreamReader("C:\\TEMP\\Benefit.txt"))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    list.Add(line); // Add to list.
+                    Console.WriteLine(line); // Write to console.
+                }
+            }
 
-            var benfitCategory = "MM";
-            var primaryBenefits = "EE, ES, EC, EF";
-            var secondaeryBenefits = "6A, 6B, AE, AG, BE, FB, FE, HT, P1, QT, UR, XP, XX";
-            var plans = "HDHP, PPO";
+            foreach (var lineItem in list)
+            {
+                var specificItem = lineItem.Split('\t');
+                var benefitCategory = specificItem[0];
+                if (benefitCategory.ToUpper() == "MEDICAL") benefitCategory = "MM";
+                else if (benefitCategory.ToUpper() == "DENTAL") benefitCategory = "DEN";
+                else benefitCategory = "VIS";
 
-            BenefitBuilder.BuildPrimaryBenefit(primaryBenefits, benfitCategory, plans, secondaeryBenefits, BenefitDictionary);
+                //need to split between primary and secondary
+                var benefitCodes = specificItem[1].Split(',');
+                //find a better way to pluck out primary benefits
+                var hardCodedPrimaryBenefits = new string[]
+                {
+                    "EE","EC","ES","EF","DE","DC","DS","DF","VE","VC","VS","VF"
+                };
+
+                var primaryBenefits = benefitCodes.Intersect(hardCodedPrimaryBenefits);
+
+                var secondaryBenefits = benefitCodes.Except(primaryBenefits); 
+
+                var plans = specificItem[2].Split();
+                var levelOfCoverage = specificItem[3];
+
+                BenefitBuilder.BuildBenefit(primaryBenefits.ToArray(), benefitCategory, plans, secondaryBenefits.ToArray(), BenefitDictionary, benefitCodeResults);
+            }
+            FileWriter.WriteFile(benefitCodeResults);
         }
-
-        
     }
 }
