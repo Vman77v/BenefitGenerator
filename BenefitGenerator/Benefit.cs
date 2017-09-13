@@ -6,12 +6,12 @@ namespace BenefitGenerator
 {
     internal class Benefit
     {      
-        public string CaseNum = "0712010";
-        public string PlanNum = "";
-        public string BenefitCategory = "";
+        public string CaseNum = "0118002";
+        public string PlanNum;
+        public string BenefitCategory;
         public string BenefitGroup;
-        public string BenefitCode = "";
-        public DateTime EnableDate = new DateTime(DateTime.Now.Year, 01, 01);
+        public string BenefitCode;
+        public DateTime EnableDate = new DateTime(2018, 01, 01);
         public DateTime? DisableDate = null;
         public int LevelOfCoverage;
         public int TermOtherCoverage;

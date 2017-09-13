@@ -12,7 +12,7 @@ namespace BenefitGenerator
 
         static Program()
         {
-            BenefitDictionary = CreateBenefitWhiteList();
+            BenefitDictionary = CreateBenefitWhiteList(); 
         }
 
         private static Dictionary<string, int> CreateBenefitWhiteList()
@@ -23,6 +23,8 @@ namespace BenefitGenerator
                 ["ES"] = 2,
                 ["EC"] = 4,
                 ["EF"] = 5,
+                ["EH"] = 3,
+                ["EN"] = 9,
                 ["DE"] = 1,
                 ["DS"] = 2,
                 ["DC"] = 4,
@@ -34,26 +36,21 @@ namespace BenefitGenerator
                 ["EMP"] = 1,["ESP"] = 2,["E1D"] = 3,["ECH"] = 4,["FAM"] = 5, //Main Levels of coverage
                 ["TWO"] = 0,                
                 ["E3D"] = 3,
-                ["SPO"] = 6,
-                ["E5D"] = 6,
-                ["CHD"] = 7,
-                ["E2D"] = 7,
-                ["E7D"] = 8,
-                ["SPC"] = 8,
-                ["E8D"] = 8,
-                ["E6D"] = 9
+                ["SPO"] = 6,["E5D"] = 6,
+                ["CHD"] = 7,["E2D"] = 7,
+                ["E7D"] = 8,["SPC"] = 8,
+                ["E8D"] = 8,["E6D"] = 9
             };
 
             return benefitDictionary;
         }
 
         private static void Main(string[] args)
-        {
-            //var inputFile = Environment.CurrentDirectory = "Benefit.txt";                   
+        {                       
 
-            List<string> list = new List<string>();
+            var list = new List<string>();
             var benefitCodeResults = new List<Benefit>();
-            using (StreamReader reader = new StreamReader("C:\\TEMP\\Benefit.txt"))
+            using (var reader = new StreamReader("C:\\TEMP\\Benefits.txt"))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -63,32 +60,47 @@ namespace BenefitGenerator
                 }
             }
 
+            var hardCodedPrimaryBenefits = new[]
+            {
+                //Medical
+                "EE","EC","ES","EF",
+                "EH", "EN",
+                "XS","XK","XF","XP",
+                //Dental
+                "DE","DC","DS","DF",
+                "TE","TC","TS","TF",
+                //Vision
+                "VE","VC","VS","VF",
+                "OE","OC","OS","OF",
+                //Life
+                "AK"
+            };
+
             foreach (var lineItem in list)
             {
-                var specificItem = lineItem.Split('\t');
-                var benefitCategory = specificItem[0];
-                if (benefitCategory.ToUpper() == "MEDICAL") benefitCategory = "MM";
-                else if (benefitCategory.ToUpper() == "DENTAL") benefitCategory = "DEN";
-                else benefitCategory = "VIS";
+                if (string.IsNullOrWhiteSpace(lineItem)) continue;
 
-                //need to split between primary and secondary
-                var benefitCodes = specificItem[1].Split(',');
-                //find a better way to pluck out primary benefits
-                var hardCodedPrimaryBenefits = new string[]
-                {
-                    "EE","EC","ES","EF","DE","DC","DS","DF","VE","VC","VS","VF"
-                };
+                var specificItem = lineItem.Split('\t');
+
+            //Step 1                               
+                var benefitCodes = specificItem[0].Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);                
 
                 var primaryBenefits = benefitCodes.Intersect(hardCodedPrimaryBenefits);
-
                 var secondaryBenefits = benefitCodes.Except(primaryBenefits); 
 
-                var plans = specificItem[2].Split();
-                var levelOfCoverage = specificItem[3];
+            //Step 2
+                var plans = specificItem[2].Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            //Step 3
+                var benefitCategory = specificItem[3];              
 
-                BenefitBuilder.BuildBenefit(primaryBenefits.ToArray(), benefitCategory, plans, secondaryBenefits.ToArray(), BenefitDictionary, benefitCodeResults);
+                //Step 4
+                var levelOfCoverage = BenefitDictionary[specificItem[4].TrimEnd(',', ' ')];                
+
+                //Main Builder Method
+                BenefitBuilder.BuildBenefit(primaryBenefits.ToArray(), secondaryBenefits.ToArray(), benefitCategory, plans, BenefitDictionary, benefitCodeResults, levelOfCoverage);
             }
             FileWriter.WriteFile(benefitCodeResults);
-        }
+        }       
     }
 }
