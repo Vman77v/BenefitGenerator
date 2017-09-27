@@ -34,6 +34,7 @@ namespace BenefitGenerator
                 ["VC"] = 4,
                 ["VF"] = 5,
                 ["EMP"] = 1,["ESP"] = 2,["E1D"] = 3,["ECH"] = 4,["FAM"] = 5, //Main Levels of coverage
+                ["ALL"] = 1245,
                 ["TWO"] = 0,                
                 ["E3D"] = 3,
                 ["SPO"] = 6,["E5D"] = 6,
@@ -63,7 +64,7 @@ namespace BenefitGenerator
             var hardCodedPrimaryBenefits = new[]
             {
                 //Medical
-                "EE","EC","ES","EF",
+                "EE","EC","E1","ES","EF",
                 "EH", "EN",
                 "XS","XK","XF","XP",
                 //Dental
@@ -94,7 +95,7 @@ namespace BenefitGenerator
             //Step 3
                 var benefitCategory = specificItem[3];              
 
-                //Step 4
+                //Step 4                
                 var levelOfCoverage = BenefitDictionary[specificItem[4].TrimEnd(',', ' ')];                
 
                 //Main Builder Method
