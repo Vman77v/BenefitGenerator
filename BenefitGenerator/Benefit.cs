@@ -16,8 +16,9 @@ namespace BenefitGenerator
         public int LevelOfCoverage;
         public int TermOtherCoverage;
         public int CoverdClmts = 0;
+        public string FormatId;
 
-        public Benefit(string caseNum, DateTime minEffDate, string benefitCode, string currentPlan, string benfitCategory, int levelOfCoverage, string benefitGroup, int termOtherCoverage)
+        public Benefit(string caseNum, DateTime minEffDate, string benefitCode, string currentPlan, string benfitCategory, int levelOfCoverage, string benefitGroup, int termOtherCoverage, string formatId)
         {
             CaseNum = caseNum;
             EnableDate = minEffDate;
@@ -26,7 +27,8 @@ namespace BenefitGenerator
             BenefitCategory = benfitCategory;
             BenefitGroup = benefitGroup;            
             LevelOfCoverage = levelOfCoverage;
-            TermOtherCoverage = termOtherCoverage;            
+            TermOtherCoverage = termOtherCoverage;
+            FormatId = formatId;
         }       
     }
 }

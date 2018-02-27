@@ -20,7 +20,8 @@ namespace BenefitGenerator
                                 $"\t{benefit.EnableDate}" +
                                 $"\t{benefit.DisableDate}" +
                                 $"\t{benefit.TermOtherCoverage}" +
-                                $"\t{benefit.CoverdClmts}"
+                                $"\t{benefit.CoverdClmts}" +
+                                $"\t{benefit.FormatId}" 
                 );
             }
         }

@@ -66,7 +66,7 @@ namespace BenefitGenerator
                 //Medical
                 "EE","EC","E1","ES","EF",
                 "EH", "EN",
-                "XS","XK","XF","XP",
+                //"XS","XK","XF","XP",
                 //Dental
                 "DE","DC","DS","DF",
                 "TE","TC","TS","TF",
